@@ -22,7 +22,8 @@ return new class extends Migration
             $table->string('street')->nullable();
             $table->string('city')->nullable();
             $table->string('zip_code')->nullable();
-            $table->integer('status');
+            $table->boolean('status')->default(true);
+            $table->decimal('balance', 18, 2)->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->softDeletes();

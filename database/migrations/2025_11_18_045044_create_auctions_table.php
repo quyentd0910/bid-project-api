@@ -20,6 +20,7 @@ return new class extends Migration
             $table->decimal('starting_price', 18, 2);
             $table->decimal('reserve_price', 18, 2);
             $table->decimal('bid_step', 18, 2);
+            $table->decimal('deposit_amount', 18, 2);
             $table->dateTime('end_time')->nullable();
             $table->dateTime('start_time')->nullable();
             $table->boolean('is_active')->default(true);
