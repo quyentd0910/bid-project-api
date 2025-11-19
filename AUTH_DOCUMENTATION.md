@@ -8,6 +8,52 @@ All endpoints are prefixed with `/api/auth`.
 
 ## Authentication Endpoints
 
+### Register
+
+Registers a new user and returns a JWT token.
+
+- **URL**: `/api/auth/register`
+- **Method**: `POST`
+- **Request Body**:
+  ```json
+  {
+    "name": "Test User",
+    "email": "test@example.com",
+    "password": "password123",
+    "password_confirmation": "password123"
+  }
+  ```
+- **Success Response**:
+  - **Code**: 200
+  - **Content**:
+    ```json
+    {
+      "status": "success",
+      "message": "Login successful",
+      "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
+      "token_type": "bearer",
+      "expires_in": 3600,
+      "user": {
+        "id": 1,
+        "name": "Test User",
+        "email": "test@example.com"
+      }
+    }
+    ```
+- **Error Responses**:
+  - **Code**: 422 Unprocessable Entity
+    ```json
+    {
+      "status": "error",
+      "message": "Validation error",
+      "errors": {
+        "name": ["The name field is required."],
+        "email": ["The email field is required.", "The email has already been taken."],
+        "password": ["The password field is required.", "The password confirmation does not match."]
+      }
+    }
+    ```
+
 ### Login
 
 Authenticates a user and returns a JWT token.

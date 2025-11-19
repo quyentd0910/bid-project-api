@@ -18,7 +18,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:user', ['except' => ['login']]);
+        $this->middleware('auth:user', ['except' => ['login', 'register']]);
     }
 
     /**
@@ -103,6 +103,43 @@ class AuthController extends Controller
     public function refresh()
     {
         return $this->respondWithToken(auth('user')->refresh());
+    }
+
+    /**
+     * Handle user registration request
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function register(Request $request)
+    {
+        // Validate the request
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:6|confirmed',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Validation error',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        // Create the user
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+
+        // Generate token for the new user
+        $token = auth('user')->login($user);
+
+        // Return token in response
+        return $this->respondWithToken($token);
     }
 
     /**
